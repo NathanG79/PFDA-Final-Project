@@ -9,7 +9,8 @@ def main():
 
     clock = pygame.time.Clock()
     dt = 0
-    black = pygame.Color(0, 0, 0)    
+    black = pygame.Color(0, 0, 0)
+
     running = True
     while running:
         # Event Loop
@@ -21,6 +22,8 @@ def main():
         
         # Render & Display
         screen.fill(black)
+        image = pygame.image.load("icons\\Volley.webp")
+        screen.blit(image, (100, 100))
         pygame.display.flip()
         dt = clock.tick(12)
 
