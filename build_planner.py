@@ -8,8 +8,8 @@ class Upgrade():
                  center_pos=(0,0)):
         self.name = name
         self.size = (270 * size_mult, 315 * size_mult)
-        self.pos = (center_pos[0] - self.size[0],
-                    center_pos[1] - self.size[1])
+        self.pos = [center_pos[0] - self.size[0],
+                    center_pos[1] - self.size[1]]
         self.image = self._init_image()
 
     def _init_image(self):
@@ -19,6 +19,9 @@ class Upgrade():
 
     def draw(self, surface):
         surface.blit(self.image, self.pos)
+
+    def scroll(self, dt, scrolling):
+        self.pos[1] += dt * scrolling
 
 
 
@@ -48,12 +51,14 @@ def main():
                     scrolling = -1
 
         # Game logic
-        
+        if scrolling != 0:
+            volley.scroll(dt, scrolling)
+            mines.scroll(dt, scrolling)
+
         # Render & Display
         screen.fill(bg_color)
         volley.draw(screen)
         mines.draw(screen)
-        print(scrolling)
         pygame.display.flip()
         dt = clock.tick(12)
         scrolling = 0
