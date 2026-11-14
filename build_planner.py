@@ -78,8 +78,8 @@ def main():
         volley.draw(screen)
         mines.draw(screen)
         pygame.display.flip()
-        dt = clock.tick(12)
-        scrolling = 0
+        dt = clock.tick(60)
+        scroll_direction = 0
 
     pygame.quit()
 
