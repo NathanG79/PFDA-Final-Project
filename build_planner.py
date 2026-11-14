@@ -23,6 +23,7 @@ def main():
         # Render & Display
         screen.fill(black)
         image = pygame.image.load("icons\\Volley.webp")
+        image = pygame.transform.scale(image, (90, 105))
         screen.blit(image, (100, 100))
         pygame.display.flip()
         dt = clock.tick(12)
