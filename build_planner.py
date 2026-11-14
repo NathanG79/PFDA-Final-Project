@@ -8,8 +8,9 @@ class Upgrade():
                  center_pos=(0,0)):
         self.name = name
         self.size = (270 * size_mult, 315 * size_mult)
-        self.pos = [center_pos[0] - self.size[0],
-                    center_pos[1] - self.size[1]]
+        self.orig_pos = (center_pos[0] - self.size[0],
+                    center_pos[1] - self.size[1])
+        self.pos = self.orig_pos
         self.image = self._init_image()
 
     def _init_image(self):
@@ -20,8 +21,21 @@ class Upgrade():
     def draw(self, surface):
         surface.blit(self.image, self.pos)
 
-    def scroll(self, dt, scrolling):
-        self.pos[1] += dt * scrolling
+    def scroll(self, scroll_pos):
+        self.pos = (self.orig_pos[0],
+                    self.orig_pos[1] + scroll_pos)
+
+
+
+
+def limit_value(min, target, max):
+    if target < min:
+        return min
+    elif target > max:
+        return max
+    else:
+        return target
+
 
 
 
@@ -38,7 +52,9 @@ def main():
     running = True
     volley = Upgrade("Volley", 1/3, (200, 200))
     mines = Upgrade("Mines", 1/3, (300, 150))
-    scrolling = 0
+    scroll_direction = 0
+    scroll_pos = 0
+    max_scroll = 500
     while running:
         # Event Loop
         for event in pygame.event.get():
@@ -46,14 +62,16 @@ def main():
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 4:
-                    scrolling = 1
+                    scroll_direction = 1
                 elif event.button == 5:
-                    scrolling = -1
+                    scroll_direction = -1
 
         # Game logic
-        if scrolling != 0:
-            volley.scroll(dt, scrolling)
-            mines.scroll(dt, scrolling)
+        if scroll_direction != 0:
+            scroll_pos += dt * scroll_direction
+            scroll_pos = limit_value(0, scroll_pos, max_scroll)
+            volley.scroll(scroll_pos)
+            mines.scroll(scroll_pos)
 
         # Render & Display
         screen.fill(bg_color)
