@@ -35,11 +35,17 @@ def main():
     running = True
     volley = Upgrade("Volley", 1/3, (200, 200))
     mines = Upgrade("Mines", 1/3, (300, 150))
+    scrolling = 0
     while running:
         # Event Loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 4:
+                    scrolling = 1
+                elif event.button == 5:
+                    scrolling = -1
 
         # Game logic
         
@@ -47,8 +53,10 @@ def main():
         screen.fill(bg_color)
         volley.draw(screen)
         mines.draw(screen)
+        print(scrolling)
         pygame.display.flip()
         dt = clock.tick(12)
+        scrolling = 0
 
     pygame.quit()
 
