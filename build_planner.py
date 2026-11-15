@@ -61,6 +61,10 @@ class AllUpgrades():
         for mod in self.mods:
             mod.draw(surface)
 
+    def scroll(self, scroll_pos):
+        for mod in self.mods:
+            mod.scroll(scroll_pos)
+
 
 
 
@@ -111,6 +115,7 @@ def main():
             scroll_pos = limit_value(min_scroll, scroll_pos, max_scroll)
             volley.scroll(scroll_pos)
             mines.scroll(scroll_pos)
+            test.scroll(scroll_pos)
 
         if pygame.mouse.get_just_pressed()[0]:
             volley.click()
