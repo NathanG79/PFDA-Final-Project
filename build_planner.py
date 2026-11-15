@@ -12,38 +12,24 @@ class Upgrade():
         self.orig_pos = (center_pos[0] - self.size[0] / 2,
                          center_pos[1] - self.size[1] / 2)
         self.pos = self.orig_pos
-        self.image = self._init_image()
-        self.points = self._update_highlight_points()
-        self.highlight_color = pygame.Color(250,250,250)
+        self.image, self.highlight_image = self._init_image()
         self.is_active = False
 
     def _init_image(self):
         image = pygame.image.load(f"icons\\{self.name}.webp")
         image = pygame.transform.scale(image, self.size)
-        return image
-
-    def _update_highlight_points(self):
-        radius = 60
-        points = []
-        center = (self.pos[0] + self.size[0] / 2,
-                    self.pos[1] + self.size[1] / 2)
-        for n in range(0,6):
-            degrees = n * 60 + 30
-            radians = degrees * math.pi / 180
-            new_point = (center[0] + radius * math.cos(radians),
-                         center[1] + radius * math.sin(radians))
-            points.append(new_point)
-        return points
+        highlight_image = pygame.image.load(f"icons\\Special\\Highlight.png")
+        highlight_image = pygame.transform.scale(highlight_image, self.size)
+        return image, highlight_image
 
     def draw(self, surface):
-        if self.is_active:
-            pygame.draw.polygon(surface, self.highlight_color, self.points)
         surface.blit(self.image, self.pos)
+        if self.is_active:
+            surface.blit(self.highlight_image, self.pos)
 
     def scroll(self, scroll_pos):
         self.pos = (self.orig_pos[0],
                     self.orig_pos[1] + scroll_pos)
-        self.points = self._update_highlight_points()
 
     def click(self):
         rect = self.image.get_rect()
