@@ -44,12 +44,23 @@ class Upgrade():
 class AllUpgrades():
 
     def __init__(self):
+        self.mods = []
+        x, y = 30, 30
         with open('mods.csv') as file:
             csv_reader = csv.reader(file)
+            next(csv_reader, None) # skip header
             for (name, category, category_num, subcategory, subcategory_num,
             group_num, num_in_group, exclusive, parent, child) in csv_reader:
-                print(name,category_num,subcategory_num,group_num,
-                      num_in_group,exclusive,parent,child)
+                self.mods.append(Upgrade(name, 1/5, (x, y)))
+                x += 60
+                if x > 800:
+                    x = 30
+                    y += 60
+
+    def draw(self, surface):
+        for mod in self.mods:
+            mod.draw(surface)
+
 
 
 
@@ -109,6 +120,7 @@ def main():
         screen.fill(bg_color)
         volley.draw(screen)
         mines.draw(screen)
+        test.draw(screen)
         pygame.display.flip()
         dt = clock.tick(60)
         scroll_direction = 0
