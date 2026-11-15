@@ -1,4 +1,4 @@
-import math
+import csv
 import pygame
 
 
@@ -41,6 +41,16 @@ class Upgrade():
             self.is_active = not self.is_active 
 
 
+class AllUpgrades():
+
+    def __init__(self):
+        with open('mods.csv') as file:
+            csv_reader = csv.reader(file)
+            for val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11 in csv_reader:
+                #name,category,category_num,subcategory,subcategory_num,group_num,num_in_group,exclusive,parent,child,
+                print(val1, val3, val5, val6, val7, val8, val9, val10, val11)
+                #print(type(val1), type(val3), type(val5), type(val6), type(val7), type(val8), type(val9), type(val10), type(val11))
+
 
 
 
@@ -72,6 +82,7 @@ def main():
     scroll_pos = 0
     min_scroll = -1000
     max_scroll = 0
+    test = AllUpgrades()
     while running:
         # Event Loop
         for event in pygame.event.get():
