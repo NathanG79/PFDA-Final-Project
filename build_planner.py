@@ -25,6 +25,15 @@ class Upgrade():
         self.pos = (self.orig_pos[0],
                     self.orig_pos[1] + scroll_pos)
 
+    def click(self):
+        rect = self.image.get_rect()
+        rect = pygame.Rect(self.pos[0], self.pos[1],
+                           rect[2], rect[3])
+        mouse_pos = pygame.mouse.get_pos()
+        was_clicked_on = rect.collidepoint(mouse_pos)
+        print(was_clicked_on)
+
+
 
 
 
@@ -73,6 +82,10 @@ def main():
             scroll_pos = limit_value(min_scroll, scroll_pos, max_scroll)
             volley.scroll(scroll_pos)
             mines.scroll(scroll_pos)
+
+        if pygame.mouse.get_just_pressed()[0]:
+            volley.click()
+            mines.click()
 
         # Render & Display
         screen.fill(bg_color)
