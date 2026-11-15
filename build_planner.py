@@ -31,8 +31,11 @@ class Upgrade():
         self.pos = (self.orig_pos[0],
                     self.orig_pos[1] + scroll_pos)
 
-    def click(self):
+    def toggle(self):
         self.is_active = not self.is_active
+
+    def set_activity(self, new_state):
+        self.is_active = new_state
 
     def return_rect(self):
         rect = self.image.get_rect()
@@ -51,8 +54,14 @@ class AllUpgrades():
             next(csv_reader, None) # skip header
             for (name, category, category_num, subcategory, subcategory_num,
             group_num, num_in_group, exclusive, parent, child) in csv_reader:
-                self.mods.append([name, Upgrade(name, 1/5, (x, y))])
-                self.mods[-1].append(self.mods[-1][1].return_rect())
+                upgrade_object = Upgrade(name, 1/5, (x, y))
+                rect = upgrade_object.return_rect()
+                mutually_exclusive = list_from_csv_item(exclusive)
+                parents = list_from_csv_item(parent)
+                children = list_from_csv_item(child)
+                self.mods.append([name, upgrade_object, rect,
+                                  mutually_exclusive, parents,
+                                  children])
                 x += 60
                 if x > 800:
                     x = 30
@@ -73,9 +82,23 @@ class AllUpgrades():
             mouse_pos = pygame.mouse.get_pos()
             was_clicked_on = rect.collidepoint(mouse_pos)
             if was_clicked_on:
-                mod[1].click()
+                mod[1].toggle()
+                if mod[3] != ['']:
+                    for exclusive in mod[3]:
+                        if exclusive != mod[0]:
+                            index = self._find_index(exclusive)
+                            self.mods[index][1].set_activity(False)
                 return
 
+    def _find_index(self, target):
+        # This wouldn't be necessary if I used a dictionary instead.
+        # However, to my understanding, iterating through a dictionary
+        # is less efficient than through a list. Since iterating through
+        # the set has to happen more often, I figure a list is overall
+        # better.
+        for index, mod in enumerate(self.mods):
+            if mod[0] == target:
+                return index
 
 
 
@@ -87,6 +110,10 @@ def limit_value(min, target, max):
         return max
     else:
         return target
+
+
+def list_from_csv_item(item):
+    return item.split(";")
 
 
 
