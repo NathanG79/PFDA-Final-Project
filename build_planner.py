@@ -32,13 +32,13 @@ class Upgrade():
                     self.orig_pos[1] + scroll_pos)
 
     def click(self):
+        self.is_active = not self.is_active
+
+    def return_rect(self):
         rect = self.image.get_rect()
         rect = pygame.Rect(self.pos[0], self.pos[1],
                            rect[2], rect[3])
-        mouse_pos = pygame.mouse.get_pos()
-        was_clicked_on = rect.collidepoint(mouse_pos)
-        if was_clicked_on:
-            self.is_active = not self.is_active 
+        return rect
 
 
 class AllUpgrades():
@@ -51,7 +51,8 @@ class AllUpgrades():
             next(csv_reader, None) # skip header
             for (name, category, category_num, subcategory, subcategory_num,
             group_num, num_in_group, exclusive, parent, child) in csv_reader:
-                self.mods.append(Upgrade(name, 1/5, (x, y)))
+                self.mods.append([name, Upgrade(name, 1/5, (x, y))])
+                self.mods[-1].append(self.mods[-1][1].return_rect())
                 x += 60
                 if x > 800:
                     x = 30
@@ -59,11 +60,21 @@ class AllUpgrades():
 
     def draw(self, surface):
         for mod in self.mods:
-            mod.draw(surface)
+            mod[1].draw(surface)
 
     def scroll(self, scroll_pos):
         for mod in self.mods:
-            mod.scroll(scroll_pos)
+            mod[1].scroll(scroll_pos)
+            mod[2] = mod[1].return_rect()
+
+    def click(self):
+        for mod in self.mods:
+            rect = mod[2]
+            mouse_pos = pygame.mouse.get_pos()
+            was_clicked_on = rect.collidepoint(mouse_pos)
+            if was_clicked_on:
+                mod[1].click()
+                return
 
 
 
@@ -91,8 +102,6 @@ def main():
     bg_color = pygame.Color(50, 50, 50)
 
     running = True
-    volley = Upgrade("Volley", 1/3, (200, 200))
-    mines = Upgrade("Mines", 1/3, (300, 150))
     scroll_direction = 0
     scroll_pos = 0
     min_scroll = -1000
@@ -113,18 +122,13 @@ def main():
         if scroll_direction != 0:
             scroll_pos += dt * scroll_direction
             scroll_pos = limit_value(min_scroll, scroll_pos, max_scroll)
-            volley.scroll(scroll_pos)
-            mines.scroll(scroll_pos)
             test.scroll(scroll_pos)
 
         if pygame.mouse.get_just_pressed()[0]:
-            volley.click()
-            mines.click()
+            test.click()
 
         # Render & Display
         screen.fill(bg_color)
-        volley.draw(screen)
-        mines.draw(screen)
         test.draw(screen)
         pygame.display.flip()
         dt = clock.tick(60)
