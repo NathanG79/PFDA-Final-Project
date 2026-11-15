@@ -54,7 +54,8 @@ def main():
     mines = Upgrade("Mines", 1/3, (300, 150))
     scroll_direction = 0
     scroll_pos = 0
-    max_scroll = 500
+    min_scroll = -1000
+    max_scroll = 0
     while running:
         # Event Loop
         for event in pygame.event.get():
@@ -69,7 +70,7 @@ def main():
         # Game logic
         if scroll_direction != 0:
             scroll_pos += dt * scroll_direction
-            scroll_pos = limit_value(0, scroll_pos, max_scroll)
+            scroll_pos = limit_value(min_scroll, scroll_pos, max_scroll)
             volley.scroll(scroll_pos)
             mines.scroll(scroll_pos)
 
