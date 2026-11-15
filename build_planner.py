@@ -49,11 +49,22 @@ class AllUpgrades():
     def __init__(self):
         self.mods = []
         x, y = 30, 30
+        x2, y2 = 50, 350
         with open('mods.csv') as file:
             csv_reader = csv.reader(file)
             next(csv_reader, None) # skip header
             for (name, category, category_num, subcategory, subcategory_num,
             group_num, num_in_group, exclusive, parent, child) in csv_reader:
+
+                if category == "gear":
+                    x = int(num_in_group) * 75 - 50
+                    y = int(subcategory_num) * 75
+                elif category == "mod":
+                    x = x2 + 60 * ((int(num_in_group) - 1) % 2)
+                    y = y2 + 70 * ((1 + int(num_in_group)) // 2)
+                    if int(num_in_group) == 4:
+                        x2 += 150
+
                 upgrade_object = Upgrade(name, 1/5, (x, y))
                 rect = upgrade_object.return_rect()
                 mutually_exclusive = list_from_csv_item(exclusive)
@@ -62,6 +73,7 @@ class AllUpgrades():
                 self.mods.append([name, upgrade_object, rect,
                                   mutually_exclusive, parents,
                                   children])
+
                 x += 60
                 if x > 800:
                     x = 30
