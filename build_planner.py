@@ -15,6 +15,7 @@ class Upgrade():
         self.image = self._init_image()
         self.points = self._update_highlight_points()
         self.highlight_color = pygame.Color(250,250,250)
+        self.is_active = False
 
     def _init_image(self):
         image = pygame.image.load(f"icons\\{self.name}.webp")
@@ -35,7 +36,8 @@ class Upgrade():
         return points
 
     def draw(self, surface):
-        pygame.draw.polygon(surface, self.highlight_color, self.points)
+        if self.is_active:
+            pygame.draw.polygon(surface, self.highlight_color, self.points)
         surface.blit(self.image, self.pos)
 
     def scroll(self, scroll_pos):
@@ -49,7 +51,8 @@ class Upgrade():
                            rect[2], rect[3])
         mouse_pos = pygame.mouse.get_pos()
         was_clicked_on = rect.collidepoint(mouse_pos)
-        print(was_clicked_on)
+        if was_clicked_on:
+            self.is_active = not self.is_active 
 
 
 
