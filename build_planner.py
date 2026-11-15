@@ -1,3 +1,4 @@
+import math
 import pygame
 
 
@@ -8,8 +9,9 @@ class Upgrade():
                  center_pos=(0,0)):
         self.name = name
         self.size = (270 * size_mult, 315 * size_mult)
-        self.orig_pos = (center_pos[0] - self.size[0],
-                    center_pos[1] - self.size[1])
+        self.center = center_pos
+        self.orig_pos = (center_pos[0] - self.size[0] / 2,
+                    center_pos[1] - self.size[1] / 2)
         self.pos = self.orig_pos
         self.image = self._init_image()
 
@@ -19,6 +21,15 @@ class Upgrade():
         return image
 
     def draw(self, surface):
+        radius = 60
+        points = []
+        for n in range(0,6):
+            degrees = n * 60 + 30
+            radians = degrees * math.pi / 180
+            new_point = (self.center[0] + radius * math.cos(radians),
+                         self.center[1] + radius * math.sin(radians))
+            points.append(new_point)
+        pygame.draw.polygon(surface, pygame.Color(250,250,250), points)
         surface.blit(self.image, self.pos)
 
     def scroll(self, scroll_pos):
