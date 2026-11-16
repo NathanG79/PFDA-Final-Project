@@ -14,6 +14,8 @@ class Upgrade():
         self.pos = self.orig_pos
         self.image, self.highlight_image = self._init_image()
         self.is_active = is_active
+        self.off_alpha = 50
+        self.update_alpha()
 
     def _init_image(self):
         image = pygame.image.load(f"icons\\{self.name}.webp")
@@ -33,9 +35,18 @@ class Upgrade():
 
     def toggle(self):
         self.is_active = not self.is_active
+        self.update_alpha()
 
     def set_activity(self, new_state):
         self.is_active = new_state
+        self.update_alpha()
+
+    def update_alpha(self):
+        if self.is_active:
+            alpha = 255
+        else:
+            alpha = self.off_alpha
+        self.image.set_alpha(alpha)
 
     def return_rect(self):
         rect = self.image.get_rect()
