@@ -63,12 +63,15 @@ class AllUpgrades():
                     y = int(subcategory_num) * 75
                 elif category == "mod":
                     x2 = 50 + 150 * ((int(group_num)) % 7)
-                    y2 = 500 + 200 * ((int(group_num)) // 7)
+                    y2 = 325 + 200 * ((int(group_num)) // 7)
                     x = x2 + x_diffs[int(num_in_group) - 1]
                     y = y2 + y_diffs[int(num_in_group) - 1]
-                else:
+                elif category == "super":
                     x = 5000
                     y = 5000
+                elif category == "wild":
+                    x = int(num_in_group) * 30
+                    y = 1200 + int(subcategory_num) * 125 + (int(num_in_group) % 2) * 50
 
                 upgrade_object = Upgrade(name, 1/5, (x, y))
                 rect = upgrade_object.return_rect()
@@ -147,10 +150,11 @@ def main():
 
     running = True
     scroll_direction = 0
-    scroll_pos = 0
-    min_scroll = -100000000
-    max_scroll = 100000000
+    scroll_pos = -800
+    min_scroll = -10000
+    max_scroll = 0
     test = AllUpgrades()
+    test.scroll(scroll_pos)
     while running:
         # Event Loop
         for event in pygame.event.get():
