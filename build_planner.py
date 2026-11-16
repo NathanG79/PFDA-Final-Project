@@ -59,7 +59,7 @@ class AllUpgrades():
             group_num, num_in_group, exclusive, parent, child) in csv_reader:
 
                 if category == "gear":
-                    x = int(num_in_group) * 75 - 50
+                    x = int(num_in_group) * 60 + 50
                     y = int(subcategory_num) * 75
                 elif category == "mod":
                     x2 = 50 + 150 * ((int(group_num)) % 7)
@@ -67,10 +67,10 @@ class AllUpgrades():
                     x = x2 + x_diffs[int(num_in_group) - 1]
                     y = y2 + y_diffs[int(num_in_group) - 1]
                 elif category == "super":
-                    x = 5000
-                    y = 5000
+                    x = 50 + int(num_in_group) * 30
+                    y = 1150 + (int(num_in_group) % 2) * 50
                 elif category == "wild":
-                    x = int(num_in_group) * 30
+                    x = 50 + int(num_in_group) * 30
                     y = 1200 + int(subcategory_num) * 125 + (int(num_in_group) % 2) * 50
 
                 upgrade_object = Upgrade(name, 1/5, (x, y))
@@ -81,11 +81,6 @@ class AllUpgrades():
                 self.mods.append([name, upgrade_object, rect,
                                   mutually_exclusive, parents,
                                   children])
-
-                x += 60
-                if x > 800:
-                    x = 30
-                    y += 60
 
     def draw(self, surface):
         for mod in self.mods:
@@ -150,11 +145,10 @@ def main():
 
     running = True
     scroll_direction = 0
-    scroll_pos = -800
-    min_scroll = -10000
+    scroll_pos = 0
+    min_scroll = -1000
     max_scroll = 0
-    test = AllUpgrades()
-    test.scroll(scroll_pos)
+    allUpgrades = AllUpgrades()
     while running:
         # Event Loop
         for event in pygame.event.get():
@@ -170,14 +164,14 @@ def main():
         if scroll_direction != 0:
             scroll_pos += dt * scroll_direction * 2
             scroll_pos = limit_value(min_scroll, scroll_pos, max_scroll)
-            test.scroll(scroll_pos)
+            allUpgrades.scroll(scroll_pos)
 
         if pygame.mouse.get_just_pressed()[0]:
-            test.click()
+            allUpgrades.click()
 
         # Render & Display
         screen.fill(bg_color)
-        test.draw(screen)
+        allUpgrades.draw(screen)
         pygame.display.flip()
         dt = clock.tick(60)
         scroll_direction = 0
