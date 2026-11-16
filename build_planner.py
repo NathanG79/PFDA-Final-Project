@@ -6,14 +6,14 @@ import pygame
 class Upgrade():
 
     def __init__(self, name="special\\The_Void", size_mult=1/3,
-                 center_pos=(0,0)):
+                 center_pos=(0,0), is_active=False):
         self.name = name
         self.size = (270 * size_mult, 315 * size_mult)
         self.orig_pos = (center_pos[0] - self.size[0] / 2,
                          center_pos[1] - self.size[1] / 2)
         self.pos = self.orig_pos
         self.image, self.highlight_image = self._init_image()
-        self.is_active = False
+        self.is_active = is_active
 
     def _init_image(self):
         image = pygame.image.load(f"icons\\{self.name}.webp")
@@ -73,7 +73,8 @@ class AllUpgrades():
                     x = 50 + int(num_in_group) * 30
                     y = 1200 + int(subcategory_num) * 125 + (int(num_in_group) % 2) * 50
 
-                upgrade_object = Upgrade(name, 1/5, (x, y))
+                is_active = category == "gear" and int(num_in_group) == 0
+                upgrade_object = Upgrade(name, 1/5, (x, y), is_active)
                 rect = upgrade_object.return_rect()
                 mutually_exclusive = list_from_csv_item(exclusive)
                 parents = list_from_csv_item(parent)
