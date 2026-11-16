@@ -58,32 +58,14 @@ class Upgrade():
 class AllUpgrades():
 
     def __init__(self):
-        self.mods = []
-        x, y = 30, 30
-        x2, y2 = 50, 50
-        x_diffs = (30, 0, 60, 30)
-        y_diffs = (0, 50, 50, 100)
+        self.mods = []        
         with open('mods.csv') as file:
             csv_reader = csv.reader(file)
             next(csv_reader, None) # skip header
             for (name, category, category_num, subcategory, subcategory_num,
             group_num, num_in_group, exclusive, parent, child) in csv_reader:
-
-                if category == "gear":
-                    x = int(num_in_group) * 60 + 50
-                    y = int(subcategory_num) * 75
-                elif category == "mod":
-                    x2 = 50 + 150 * ((int(group_num)) % 7)
-                    y2 = 325 + 200 * ((int(group_num)) // 7)
-                    x = x2 + x_diffs[int(num_in_group) - 1]
-                    y = y2 + y_diffs[int(num_in_group) - 1]
-                elif category == "super":
-                    x = 50 + int(num_in_group) * 30
-                    y = 1150 + (int(num_in_group) % 2) * 50
-                elif category == "wild":
-                    x = 50 + int(num_in_group) * 30
-                    y = 1200 + int(subcategory_num) * 125 + (int(num_in_group) % 2) * 50
-
+                x,y = self._get_position(category, int(subcategory_num),
+                                         int(group_num), int(num_in_group))
                 is_active = category == "gear" and int(num_in_group) == 0
                 upgrade_object = Upgrade(name, 1/5, (x, y), is_active)
                 rect = upgrade_object.return_rect()
@@ -93,6 +75,25 @@ class AllUpgrades():
                 self.mods.append([name, upgrade_object, rect,
                                   mutually_exclusive, parents,
                                   children])
+
+    def _get_position(self, category, subcategory_num,
+                      group_num, num_in_group):
+        x, y = 0, 0
+        x_diffs = (30, 0, 60, 30)
+        y_diffs = (0, 50, 50, 100)
+        if category == "gear":
+            x = num_in_group * 60 + 50
+            y = subcategory_num * 75
+        elif category == "mod":
+            x = 50 + 150 * (group_num % 7) + x_diffs[num_in_group - 1]
+            y = 325 + 200 * (group_num // 7) + y_diffs[num_in_group - 1]
+        elif category == "super":
+            x = 50 + num_in_group * 30
+            y = 1150 + (num_in_group % 2) * 50
+        elif category == "wild":
+            x = 50 + num_in_group * 30
+            y = 1200 + subcategory_num * 125 + (num_in_group % 2) * 50
+        return x, y
 
     def draw(self, surface):
         for mod in self.mods:
