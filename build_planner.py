@@ -62,11 +62,31 @@ class AllUpgrades():
                     x = int(num_in_group) * 75 - 50
                     y = int(subcategory_num) * 75
                 elif category == "mod":
-                    if int(num_in_group) == 1:
-                        x2 = 50 + 200 * ((int(group_num) + 1) % 2)
-                        y2 += 200 * ((int(group_num)) % 2)
-                    x = x2 + x_diffs[int(num_in_group) - 1]
-                    y = y2 + y_diffs[int(num_in_group) - 1]
+                    if subcategory == "weapon":
+                        if int(num_in_group) == 1:
+                            x2 = 50 + 150 * ((int(group_num) + 1) % 2)
+                            y2 += 200 * ((int(group_num)) % 2)
+                        x = x2 + x_diffs[int(num_in_group) - 1]
+                        y = y2 + y_diffs[int(num_in_group) - 1]
+                        if group_num == "8" and num_in_group == "4":
+                            x2 = 200
+                    elif subcategory == "body" or subcategory == "shield":
+                        if int(num_in_group) == 1:
+                            y2 = 650 + 200 * ((int(group_num) + 1) % 2)
+                            x2 += 150 * ((int(group_num)) % 2)
+                        x = x2 + x_diffs[int(num_in_group) - 1]
+                        y = y2 + y_diffs[int(num_in_group) - 1]
+                    elif subcategory == "construct":
+                        if group_num == "1" and num_in_group == "1":
+                            x2 = 200
+                        if int(num_in_group) == 1:
+                            y2 = 250 + 200 * ((int(group_num) + 1) % 2)
+                            x2 += 150 * ((int(group_num)) % 2)
+                        x = x2 + x_diffs[int(num_in_group) - 1]
+                        y = y2 + y_diffs[int(num_in_group) - 1]
+                else:
+                    x = 5000
+                    y = 5000
 
                 upgrade_object = Upgrade(name, 1/5, (x, y))
                 rect = upgrade_object.return_rect()
@@ -136,7 +156,7 @@ def list_from_csv_item(item):
 def main():
     pygame.init()
     pygame.display.set_caption("Nova Drift Build Planner")
-    resolution = (800, 600)
+    resolution = (1200, 600)
     screen = pygame.display.set_mode(resolution)
 
     clock = pygame.time.Clock()
