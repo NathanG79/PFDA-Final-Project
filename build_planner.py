@@ -49,7 +49,9 @@ class AllUpgrades():
     def __init__(self):
         self.mods = []
         x, y = 30, 30
-        x2, y2 = 50, 350
+        x2, y2 = 50, 50
+        x_diffs = (30, 0, 60, 30)
+        y_diffs = (0, 50, 50, 100)
         with open('mods.csv') as file:
             csv_reader = csv.reader(file)
             next(csv_reader, None) # skip header
@@ -60,10 +62,11 @@ class AllUpgrades():
                     x = int(num_in_group) * 75 - 50
                     y = int(subcategory_num) * 75
                 elif category == "mod":
-                    x = x2 + 60 * ((int(num_in_group) - 1) % 2)
-                    y = y2 + 70 * ((1 + int(num_in_group)) // 2)
-                    if int(num_in_group) == 4:
-                        x2 += 150
+                    if int(num_in_group) == 1:
+                        x2 = 50 + 200 * ((int(group_num) + 1) % 2)
+                        y2 += 200 * ((int(group_num)) % 2)
+                    x = x2 + x_diffs[int(num_in_group) - 1]
+                    y = y2 + y_diffs[int(num_in_group) - 1]
 
                 upgrade_object = Upgrade(name, 1/5, (x, y))
                 rect = upgrade_object.return_rect()
@@ -143,7 +146,7 @@ def main():
     running = True
     scroll_direction = 0
     scroll_pos = 0
-    min_scroll = -1000
+    min_scroll = -10000
     max_scroll = 0
     test = AllUpgrades()
     while running:
